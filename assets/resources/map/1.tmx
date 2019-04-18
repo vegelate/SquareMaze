@@ -5,6 +5,16 @@
   <terraintypes>
    <terrain name="新地形" tile="-1"/>
   </terraintypes>
+  <tile id="1">
+   <properties>
+    <property name="type" value="wall"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="type" value="wall"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="BG" width="11" height="21">
   <data encoding="csv">
@@ -12,10 +22,10 @@
 6,6,6,6,6,6,6,6,6,6,6,
 6,6,6,6,6,6,6,6,6,6,6,
 6,6,5,5,5,5,5,5,5,5,6,
-6,6,5,4,6,6,6,6,6,6,6,
-6,6,5,4,6,6,6,6,6,6,6,
-6,6,5,4,6,6,6,6,6,6,6,
-6,6,5,4,6,6,6,6,6,6,6,
+6,6,5,6,6,6,6,6,6,6,6,
+6,6,5,6,6,6,6,6,6,6,6,
+6,6,5,6,6,6,6,6,6,6,6,
+6,6,5,6,6,6,6,6,6,6,6,
 6,6,5,6,6,6,6,6,6,6,6,
 6,6,5,5,5,5,5,5,5,5,6,
 6,6,6,6,6,6,6,6,6,5,6,
@@ -38,9 +48,9 @@
 0,4,2,2,2,2,2,2,2,2,4,
 0,4,0,0,0,0,0,0,0,0,4,
 0,4,0,4,2,2,2,2,2,2,2,
-0,4,0,0,0,0,0,0,0,0,0,
-0,4,0,0,0,0,0,0,0,0,0,
-0,4,0,1,1,1,1,1,1,1,1,
+0,4,0,4,0,0,0,0,0,0,0,
+0,4,0,4,0,0,0,0,0,0,0,
+0,4,0,4,1,1,1,1,1,1,1,
 0,4,0,2,2,2,2,2,2,2,4,
 0,4,0,0,0,0,0,0,0,0,4,
 0,2,2,2,2,2,2,2,4,0,4,
@@ -56,14 +66,14 @@
 0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup name="object">
-  <object id="1" x="62.5" y="912.5" width="25" height="25">
+ <objectgroup name="Object" opacity="0.79">
+  <object id="1" name="Hero" x="75" y="925" width="10" height="10">
    <ellipse/>
   </object>
-  <object id="2" x="462.5" y="912.5" width="25" height="25">
+  <object id="2" name="M1" x="475" y="925" width="10" height="10">
    <ellipse/>
   </object>
-  <object id="3" x="450" y="462.5" width="25" height="25">
+  <object id="3" name="M2" x="475" y="475" width="10" height="10">
    <ellipse/>
   </object>
  </objectgroup>
