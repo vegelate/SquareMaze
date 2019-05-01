@@ -8,6 +8,7 @@
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 var Hero = require("Hero")
+var GameInfo = require('GameInfo')
 
 var GamePlay = cc.Class({
     extends: cc.Component,
@@ -32,7 +33,10 @@ var GamePlay = cc.Class({
         //     }
         // },
 
-
+        canvas:{
+            default:null,
+            typd: cc.Canvas,
+        },
 
         map:{
             default: null,
@@ -58,11 +62,17 @@ var GamePlay = cc.Class({
 
     },
 
+    onDestroy(){
+        GamePlay.instance = null;
+    },
+
     start () {
         let self = this
 
         // 加载地图
-        self.loadMap("map/1") // 不用加扩展名 .tmx
+        let mapPath = "map/" + GameInfo.instance.levelIndex
+        cc.log("mapPath:", mapPath)
+        self.loadMap(mapPath) // 不用加扩展名 .tmx
     },
 
     loadMap(path){
