@@ -14,4 +14,14 @@
    <property name="type" value="wall"/>
   </properties>
  </tile>
+ <tile id="4">
+  <properties>
+   <property name="type" value="floor"/>
+  </properties>
+ </tile>
+ <tile id="5">
+  <properties>
+   <property name="type" value="wall"/>
+  </properties>
+ </tile>
 </tileset>
