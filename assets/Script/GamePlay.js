@@ -25,6 +25,7 @@ var GamePlay = cc.Class({
             default: null,
             type: cc.TiledMap,
         },
+
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -53,7 +54,6 @@ var GamePlay = cc.Class({
         let self = this
 
         // 加载地图
-
         if (GameInfo.instance != null && GameInfo.instance.levelIndex != null){
             let mapPath = "map/" + GameInfo.instance.levelIndex
             cc.log("mapPath:", mapPath)
@@ -75,6 +75,7 @@ var GamePlay = cc.Class({
 
     onMapLoaded(){
         let self = this
+        // 解析地图
         self.mapSize = self.map.getMapSize()
         self.tileSize = self.map.getTileSize()
         self.mapTotalSize = cc.size(self.mapSize.width*self.tileSize.width, self.mapSize.height*self.tileSize.height)    
@@ -84,26 +85,10 @@ var GamePlay = cc.Class({
         self.wallBottomLayer = self.map.getLayer("WallBottom")
         self.playLayer = self.map.getLayer("Play")
 
-        var objects = self.map.getObjectGroup("Object")
-        var heroObj = objects.getObject("Hero")
-        var m1Obj = objects.getObject("M1")
-        var m2Obj = objects.getObject("M2")
-        var m3Obj = objects.getObject("M3")
-
+        // 地图初始化
         self.setupCamera()
-
-        if (heroObj != null){
-            let heroPos = cc.v2(heroObj.x, heroObj.y)
-            let heroCoord = self.posToCoord(heroPos)
-
-            cc.log("hero pos:", heroPos.toString())
-            cc.log("hero coord:", heroCoord.toString())
-            
-            self.spawnHero("prefab/hero", heroCoord)
-        }else{
-            cc.error("map has no Hero spawn point!")
-        }
-
+        self.spawnActor()
+        self.spawnPickable()
     },
 
     // 设置相机的位置和缩放
@@ -119,6 +104,26 @@ var GamePlay = cc.Class({
         self.camera.zoomRatio = zoom
     },
 
+    // 出生角色
+    spawnActor(){
+        let self = this
+        let actorGroup = self.map.getObjectGroup("Actor")
+        let heroObj = actorGroup.getObject("Hero") // 英雄出生点
+        let endObj = actorGroup.getObject("End")   // 结束点
+
+        if (heroObj != null){
+            let heroPos = cc.v2(heroObj.x, heroObj.y)
+            let heroCoord = self.posToCoord(heroPos)
+
+            cc.log("hero pos:", heroPos.toString())
+            cc.log("hero coord:", heroCoord.toString())
+            
+            self.spawnHero("prefab/hero", heroCoord)
+        }else{
+            cc.error("map has no Hero spawn point!")
+        }       
+    },
+    
     // 出生英雄 
     spawnHero(path, coord){
         let self = this;
@@ -129,33 +134,59 @@ var GamePlay = cc.Class({
             self.hero = newNode.getComponent(Hero)
             self.hero.setCoord(coord)
         });
+
+        
+    },
+
+    // 出生可收集物
+    spawnPickable(){
+        let self = this
+
+        // 出生 coin
+        self.coinGroup = self.map.getObjectGroup("Coin")   // TiledObjectGroup
+        var objs = self.coinGroup.getObjects()       
+
+        cc.loader.loadRes('prefab/coin', function (err, prefab) {
+
+            // 遍历 coin 配置
+            for (var i=0; i<objs.length; i++){
+                let obj = objs[i]
+                cc.log('11 coin:', obj.toString(), obj.x, obj.y, obj.width, obj.height);
+
+                var newNode = cc.instantiate(prefab);
+                newNode.position = cc.p(obj.x, obj.y)
+                self.playLayer.node.addChild(newNode);
+            }
+
+
+
+
+        });
+
     },
 
     moveHero(x, y){
         let self = this
         let tileSize = self.map.getTileSize()
-        if (x > 0){
-            let coord = self.hero.coord
-            cc.log("hero coord:", coord.toString())
-            let tileType = self.getTileType(self.bgLayer, coord)
+        let offset = cc.v2(x, y)
 
-            //let curr_tile = self.bgLayer.getTiledTileAt(coord.x, coord.y)
-            cc.log("curr_tile type:", tileType)
-            let right = coord
-            while(true){
-                right = cc.p(right.x+1, right.y)
-                let tileType = self.getTileType(self.bgLayer, right)
-                //let right_tile = 
-                cc.log(right.toString(), " type:", tileType)
-                if (tileType == null || tileType == 'wall')
-                {
-                    break
-                }
+        // 向 offset 方向遍历，找到落脚点
+        let coord = self.hero.coord
+        cc.log("hero coord:", coord.toString())
+        while(true){
+            let nextPos = coord.add(offset)
+            let tileType = self.getTileType(self.bgLayer, nextPos)
+            cc.log(nextPos.toString(), " type:", tileType)
+            if (tileType == null || tileType == 'wall')
+            {
+                break
             }
-
-        }else if (x < 0){
-
+            else{
+                coord = cc.v2(nextPos.x, nextPos.y);
+            }
         }
+
+        self.hero.setCoord(coord)
     },
 
     getTileType(layer, coord){
@@ -196,13 +227,16 @@ var GamePlay = cc.Class({
 
             }else if (d.x < 0){
                 cc.log("Move to x-")
+                self.moveHero(-1, 0)
             }
         }else if (Math.abs(d.y) > Math.abs(d.x)){
             // y 移动
             if (d.y > 0){
-                cc.log("Move to y+")
+                cc.log("Move to screen y+, map y-")
+                self.moveHero(0, -1)
             }else if (d.y < 0){
-                cc.log("Move to y-")
+                cc.log("Move to screen y-, map y+")
+                self.moveHero(0, 1)
             }
         }
 
