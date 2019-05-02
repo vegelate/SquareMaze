@@ -7,8 +7,10 @@
 // Learn life-cycle callbacks:
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
-var Hero = require("Hero")
+
 var GameInfo = require('GameInfo')
+var Hero = require("Hero")
+var Pickable = require("Pickable")
 
 var GamePlay = cc.Class({
     extends: cc.Component,
@@ -34,6 +36,8 @@ var GamePlay = cc.Class({
         GamePlay.instance = this
 
         let self = this
+        self.pickables = {} // 可拾取物， coord_idx - item
+
         this.node.on(cc.Node.EventType.TOUCH_START, function ( event ) {
             console.log('Touch Start');
             self.onTouchStart(event.getLocationX(), event.getLocationY())
@@ -148,18 +152,35 @@ var GamePlay = cc.Class({
 
         cc.loader.loadRes('prefab/coin', function (err, prefab) {
 
-            // 遍历 coin 配置
-            for (var i=0; i<objs.length; i++){
-                let obj = objs[i]
-                cc.log('11 coin:', obj.toString(), obj.x, obj.y, obj.width, obj.height);
+        // 遍历 coin 配置
+        for (var i=0; i<objs.length; i++){
+            let obj = objs[i]
+            cc.log('coin:', obj.toString(), obj.x, obj.y, obj.width, obj.height);
 
-                var newNode = cc.instantiate(prefab);
-                newNode.position = cc.p(obj.x, obj.y)
-                self.playLayer.node.addChild(newNode);
+            // 判断是横向还是纵向
+            let offset = null
+            let num = 0 // 出生的 coin 数量
+            if (obj.width > obj.height){
+                offset = cc.p(1, 0)
+                num = Math.ceil(obj.width / self.tileSize.width)
+            }else{
+                offset = cc.p(0, 1)
+                num = Math.ceil(obj.height / self.tileSize.height)
             }
 
+            // 出生一排金币
+            let startCoord = self.posToCoord(cc.p(obj.x, obj.y))
+            for (var j=0; j<num; j++){
+                var newNode = cc.instantiate(prefab);
+                let coord = startCoord.add(offset.mul(j))
+                newNode.position = self.coordToPos(coord)
+                self.playLayer.node.addChild(newNode);
 
+                let coordIdx = self.coordToIndex(coord)
+                self.pickables[coordIdx] = newNode.getComponent(Pickable)
 
+            }
+        }
 
         });
 
@@ -173,8 +194,11 @@ var GamePlay = cc.Class({
         // 向 offset 方向遍历，找到落脚点
         let coord = self.hero.coord
         cc.log("hero coord:", coord.toString())
+        let coords = [] // 记录经过的坐标
+
         while(true){
             let nextPos = coord.add(offset)
+
             let tileType = self.getTileType(self.bgLayer, nextPos)
             cc.log(nextPos.toString(), " type:", tileType)
             if (tileType == null || tileType == 'wall')
@@ -183,6 +207,19 @@ var GamePlay = cc.Class({
             }
             else{
                 coord = cc.v2(nextPos.x, nextPos.y);
+            }
+            coords.push(coord)
+        }
+
+        // 删除 pickable
+        for (var i=0; i<coords.length; i++){
+            let c = coords[i]
+            let coordIdx = self.coordToIndex(c)
+            
+            if (self.pickables[coordIdx]){
+                let pickable = self.pickables[coordIdx]
+                self.pickables[coordIdx] = false
+                pickable.node.destroy();
             }
         }
 
@@ -244,10 +281,11 @@ var GamePlay = cc.Class({
 
     // update (dt) {},
 
+
     // 地图像素坐标转成瓦片单位坐标
     posToCoord(pos){
         var mapSize = this.mapTotalSize;
-        var tileSize = this.map.getTileSize();
+        var tileSize = this.tileSize;
 
         //cc.log("map size:", mapSize.toString())
         //cc.log("tile size:", tileSize.toString())
@@ -260,11 +298,22 @@ var GamePlay = cc.Class({
 
     coordToPos(coord){
         var mapSize = this.mapTotalSize;
-        var tileSize = this.map.getTileSize();
+        var tileSize = this.tileSize;
 
         var x = (coord.x+0.5) * tileSize.width;
         var y = mapSize.height - (coord.y+0.5) * tileSize.height;
 
         return cc.v2(x, y);
+    },
+
+     // 将位置标准化到格子中心
+    posToTileCenter(pos){
+        let coord = this.posToCoord(pos)
+        return this.coordToPos(coord)
+    },
+
+    // 获取坐标的 索引
+    coordToIndex(coord){
+        return coord.y * this.mapSize.width + coord.x;
     },
 });
