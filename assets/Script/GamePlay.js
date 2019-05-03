@@ -137,6 +137,21 @@ var GamePlay = cc.Class({
 
             self.hero = newNode.getComponent(Hero)
             self.hero.setCoord(coord)
+
+            // 设置英雄初始面朝方向
+            let right = cc.p(coord.x+1, coord.y)
+            let left = cc.p(coord.x-1, coord.y)
+            let rightType = self.getTileType(self.bgLayer, right)
+            let leftType = self.getTileType(self.bgLayer, left)
+            if (leftType == "wall"){
+                self.hero.facing(1)
+            }else if(rightType == "wall"){
+                self.hero.facing(-1)
+            }
+            else{
+                self.hero.facing(1)
+            }
+            
         });
 
         
@@ -226,7 +241,14 @@ var GamePlay = cc.Class({
         self.hero.setCoord(coord)
     },
 
+    // 获取 tile 类型 wall / floor
     getTileType(layer, coord){
+        // 越界检查
+        if (coord.x < 0 || coord.x >= this.mapSize.x ||
+            coord.y < 0 || coord.y >= this.mapSize.y){
+                return "wall"
+        }
+
         let gid = layer.getTileGIDAt(coord)
         if (gid != null){
             var prop = this.map.getPropertiesForGID(gid)
@@ -234,8 +256,8 @@ var GamePlay = cc.Class({
                 return prop.type
             }
         }
-        return null
-        
+
+        return "wall"
     },
 
     // 触屏开始

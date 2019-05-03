@@ -33,13 +33,26 @@ cc.Class({
 
     onLoad () {
         this.coord = cc.Vec2.ZERO   // 坐标
-
+        this.sprite = this.node.getComponent(cc.Sprite);
+        this.initScaleX = this.node.scaleX
+        this.initScaleY = this.node.scaleY
     },
 
     setCoord(coord){
         this.coord = coord;
         var GamePlay = require("GamePlay")
         this.node.position = GamePlay.instance.coordToPos(coord)
+    },
+
+    // 设置面朝向，默认朝左边
+    facing(x){
+        if (x >= 0) {
+            this.node.scaleX = -this.initScaleX
+        }
+        else{
+            this.node.scaleX = this.initScaleX
+        }
+
     },
 
     start () {
