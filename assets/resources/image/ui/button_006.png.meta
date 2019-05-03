@@ -1,31 +1,31 @@
 {
   "ver": "2.3.0",
-  "uuid": "d557cdc8-cd1e-4219-b190-4d92b7a73fe1",
+  "uuid": "fe229110-bbc9-4103-b487-1c453fe45fba",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
   "premultiplyAlpha": false,
   "platformSettings": {},
   "subMetas": {
-    "avatar_05": {
+    "button_006": {
       "ver": "1.0.3",
-      "uuid": "e1b3b704-1027-4700-9760-6f7f4873f475",
-      "rawTextureUuid": "d557cdc8-cd1e-4219-b190-4d92b7a73fe1",
+      "uuid": "969aa5a0-9842-415e-a1f4-077c8eb097ef",
+      "rawTextureUuid": "fe229110-bbc9-4103-b487-1c453fe45fba",
       "trimType": "auto",
       "trimThreshold": 1,
       "rotated": false,
-      "offsetX": -5.5,
+      "offsetX": 0,
       "offsetY": 0,
-      "trimX": 2,
-      "trimY": 2,
-      "width": 1009,
-      "height": 124,
-      "rawWidth": 1024,
-      "rawHeight": 128,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 60,
+      "height": 58,
+      "rawWidth": 60,
+      "rawHeight": 58,
       "borderTop": 0,
       "borderBottom": 0,
       "borderLeft": 0,
-      "borderRight": 739,
+      "borderRight": 0,
       "subMetas": {}
     }
   }
