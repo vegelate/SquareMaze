@@ -1,3 +1,5 @@
+import { __esModule } from "../../build/wechatgame/libs/weapp-adapter/util";
+
 // Learn cc.Class:
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/class.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/class.html
@@ -36,8 +38,12 @@ var GameInfo = cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
+        let self = this;
         GameInfo.instance = this;
         cc.game.addPersistRootNode(this.node)
+
+        self.AP = 10;  // 体力值
+
     },
 
     start () {
@@ -46,3 +52,6 @@ var GameInfo = cc.Class({
 
     // update (dt) {},
 });
+
+module.exports = GameInfo;
+

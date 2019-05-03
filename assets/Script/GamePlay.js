@@ -92,6 +92,10 @@ var GamePlay = cc.Class({
         self.wallUpLayer = self.map.getLayer("WallUp")
         self.wallBottomLayer = self.map.getLayer("WallBottom")
         self.playLayer = self.map.getLayer("Play")
+        if (!self.bgLayer || !self.playLayer){
+            cc.error("地图不正确，找不到 BG 层或者 Play 层")
+            return
+        }
 
         // 地图初始化
         self.setupCamera()
