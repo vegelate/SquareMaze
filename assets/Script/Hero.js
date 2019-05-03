@@ -27,15 +27,18 @@ cc.Class({
         //         this._bar = value;
         //     }
         // },
+        sprite:{
+            default: null,
+            type: cc.Sprite,
+        }
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
         this.coord = cc.Vec2.ZERO   // 坐标
-        this.sprite = this.node.getComponent(cc.Sprite);
-        this.initScaleX = this.node.scaleX
-        this.initScaleY = this.node.scaleY
+        this.initScaleX = this.sprite.node.scaleX
+        this.initScaleY = this.sprite.node.scaleY
     },
 
     setCoord(coord){
@@ -46,11 +49,11 @@ cc.Class({
 
     // 设置面朝向，默认朝左边
     facing(x){
-        if (x >= 0) {
-            this.node.scaleX = -this.initScaleX
+        if (x > 0) {
+            this.sprite.node.scaleX = -this.initScaleX
         }
-        else{
-            this.node.scaleX = this.initScaleX
+        else if(x < 0){
+            this.sprite.node.scaleX = this.initScaleX
         }
 
     },

@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "hero",
+    "_name": "HeroRush",
     "_objFlags": 0,
     "_parent": null,
     "_children": [
@@ -41,8 +41,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 50,
-      "height": 50
+      "width": 0,
+      "height": 0
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -72,9 +72,7 @@
     "_skewY": 0,
     "_zIndex": 0,
     "_is3DNode": false,
-    "groupIndex": 0,
-    "_rotationX": 0,
-    "_rotationY": 0,
+    "groupIndex": 2,
     "_id": ""
   },
   {
@@ -105,24 +103,24 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 363,
-      "height": 464
+      "width": 65,
+      "height": 45
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
+      "x": 0.8,
       "y": 0.5
     },
     "_position": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 12,
+      "y": 0,
       "z": 0
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.1,
-      "y": 0.1,
+      "x": 3,
+      "y": 3,
       "z": 1
     },
     "_quat": {
@@ -136,7 +134,7 @@
     "_skewY": 0,
     "_zIndex": 0,
     "_is3DNode": false,
-    "groupIndex": 0,
+    "groupIndex": 2,
     "_rotationX": 0,
     "_rotationY": 0,
     "_id": ""
@@ -150,12 +148,12 @@
     },
     "_enabled": true,
     "_srcBlendFactor": 770,
-    "_dstBlendFactor": 771,
+    "_dstBlendFactor": 1,
     "_spriteFrame": {
-      "__uuid__": "55002c04-a9ea-43c6-b954-ff63e0465683"
+      "__uuid__": "94493a5d-eaf5-4c7d-9fae-987030daeaa4"
     },
     "_type": 0,
-    "_sizeMode": 0,
+    "_sizeMode": 1,
     "_fillType": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
@@ -175,19 +173,20 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "f392a357-0539-4eac-893a-2c5ebf3d73e9"
+      "__id__": 0
     },
-    "fileId": "31z8T/y71KGr0zlIG4iBy0",
+    "fileId": "4bF2M+4eFLGYE/efDQo3Hv",
     "sync": false
   },
   {
-    "__type__": "046fab0aBdFq6DXoUw1faFK",
+    "__type__": "ed053z5aONJjL9DQ4rmoKZN",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 1
     },
     "_enabled": true,
+    "time": 1,
     "sprite": {
       "__id__": 3
     },
@@ -199,9 +198,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "f392a357-0539-4eac-893a-2c5ebf3d73e9"
+      "__id__": 0
     },
-    "fileId": "29hXBzyk9BwqhuDIkFa3V+",
+    "fileId": "380EixdZdKMaegI9poyIoR",
     "sync": false
   }
 ]

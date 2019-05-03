@@ -46,9 +46,10 @@
 2,2,2,2,2,2
 </data>
  </layer>
- <objectgroup name="Object" opacity="0.79">
+ <objectgroup name="Coin"/>
+ <objectgroup name="Actor" opacity="0.79">
   <object id="5" name="Hero" x="75" y="225" width="10" height="10"/>
-  <object id="6" x="-23.5" y="-60.5"/>
+  <object id="6" name="End" x="73.5" y="73.5"/>
  </objectgroup>
  <layer name="Play" width="6" height="6">
   <data encoding="csv">

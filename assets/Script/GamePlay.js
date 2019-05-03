@@ -23,6 +23,10 @@ var GamePlay = cc.Class({
             default: null,
             type: cc.Camera,
         },
+        effectCamera:{
+            default: null,
+            type: cc.Camera,
+        },
         map:{
             default: null,
             type: cc.TiledMap,
@@ -34,8 +38,8 @@ var GamePlay = cc.Class({
 
     onLoad () {
         GamePlay.instance = this
-
-        let self = this
+        let self = this        
+        self.MOVING_SPEED = 0.0333  // 移动速度
         self.pickables = {} // 可拾取物， coord_idx - item
 
         this.node.on(cc.Node.EventType.TOUCH_START, function ( event ) {
@@ -106,6 +110,7 @@ var GamePlay = cc.Class({
         let zoom = Math.min(canvasSize.width/self.mapTotalSize.width, canvasSize.height/self.mapTotalSize.height)
         cc.log("zoom:", zoom)
         self.camera.zoomRatio = zoom
+        self.effectCamera.zoomRatio = zoom
     },
 
     // 出生角色
@@ -125,7 +130,14 @@ var GamePlay = cc.Class({
             self.spawnHero("prefab/hero", heroCoord)
         }else{
             cc.error("map has no Hero spawn point!")
-        }       
+        }      
+        
+        if (endObj != null){
+            let endPos = cc.v2(endObj.x, endObj.y)
+            self.endCoord = self.posToCoord(endPos)
+        }else{
+            cc.error("map has no End point!")
+        }   
     },
     
     // 出生英雄 
@@ -139,8 +151,8 @@ var GamePlay = cc.Class({
             self.hero.setCoord(coord)
 
             // 设置英雄初始面朝方向
-            let right = cc.p(coord.x+1, coord.y)
-            let left = cc.p(coord.x-1, coord.y)
+            let right = cc.v2(coord.x+1, coord.y)
+            let left = cc.v2(coord.x-1, coord.y)
             let rightType = self.getTileType(self.bgLayer, right)
             let leftType = self.getTileType(self.bgLayer, left)
             if (leftType == "wall"){
@@ -151,7 +163,7 @@ var GamePlay = cc.Class({
             else{
                 self.hero.facing(1)
             }
-            
+
         });
 
         
@@ -176,15 +188,15 @@ var GamePlay = cc.Class({
             let offset = null
             let num = 0 // 出生的 coin 数量
             if (obj.width > obj.height){
-                offset = cc.p(1, 0)
+                offset = cc.v2(1, 0)
                 num = Math.ceil(obj.width / self.tileSize.width)
             }else{
-                offset = cc.p(0, 1)
+                offset = cc.v2(0, 1)
                 num = Math.ceil(obj.height / self.tileSize.height)
             }
 
             // 出生一排金币
-            let startCoord = self.posToCoord(cc.p(obj.x, obj.y))
+            let startCoord = self.posToCoord(cc.v2(obj.x, obj.y))
             for (var j=0; j<num; j++){
                 var newNode = cc.instantiate(prefab);
                 let coord = startCoord.add(offset.mul(j))
@@ -202,9 +214,13 @@ var GamePlay = cc.Class({
     },
 
     moveHero(x, y){
-        let self = this
+        var self = this     
+        if (self.isHeroMoving) return   // 移动状态
+        self.isHeroMoving = true     
+        
         let tileSize = self.map.getTileSize()
         let offset = cc.v2(x, y)
+        let movingSpeed = self.MOVING_SPEED   // 每多久经过一个 tile
 
         // 向 offset 方向遍历，找到落脚点
         let coord = self.hero.coord
@@ -223,22 +239,61 @@ var GamePlay = cc.Class({
             else{
                 coord = cc.v2(nextPos.x, nextPos.y);
             }
-            coords.push(coord)
+            coords.push(nextPos)
         }
 
-        // 删除 pickable
-        for (var i=0; i<coords.length; i++){
-            let c = coords[i]
-            let coordIdx = self.coordToIndex(c)
-            
-            if (self.pickables[coordIdx]){
-                let pickable = self.pickables[coordIdx]
-                self.pickables[coordIdx] = false
-                pickable.node.destroy();
-            }
+        let numTiles = coords.length;    // 这次移动经过的 tile 数量
+        // 按照间隔依次拾取
+        for (let i=0; i<numTiles; i++)
+        {
+            self.scheduleOnce(
+                function(){
+                    let c = coords[i]
+                    let coordIdx = self.coordToIndex(c)
+                    
+                    if (self.pickables[coordIdx]){
+                        let pickable = self.pickables[coordIdx]
+                        self.pickables[coordIdx] = false
+                        pickable.node.destroy();
+                    }                
+                }, (i+1)*movingSpeed
+            )            
         }
 
-        self.hero.setCoord(coord)
+        // 英雄移动
+        cc.log('moving hero')
+        self.hero.facing(x)
+        let totalTime = (numTiles)*movingSpeed;
+        let seq = cc.sequence(
+            cc.moveTo(totalTime, self.coordToPos(coord)),
+            cc.callFunc(function(){
+
+                self.isHeroMoving = false
+                self.hero.setCoord(coord)
+
+                // 判断关卡结束
+                if (coord.equals(self.endCoord)){
+                    cc.director.loadScene('levelSelect')
+                }
+            }))
+        self.hero.node.runAction(seq)
+
+        // 播放特效
+        cc.log('play effect')
+        cc.loader.loadRes("prefab/HeroRush", function (err, prefab) {
+            var newNode = cc.instantiate(prefab);
+            self.hero.node.addChild(newNode);
+            // 设置朝向
+            if (x < 0) newNode.rotation = 180
+            else if (y > 0) newNode.rotation = 90
+            else if (y < 0) newNode.rotation = 270
+
+
+            var HeroRush = require('Effect/HeroRush')
+            let rush = newNode.getComponent(HeroRush)
+            rush.time = totalTime
+        });
+
     },
 
     // 获取 tile 类型 wall / floor
@@ -339,3 +394,5 @@ var GamePlay = cc.Class({
         return coord.y * this.mapSize.width + coord.x;
     },
 });
+
+module.exports = GamePlay;

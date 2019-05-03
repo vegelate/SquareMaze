@@ -8,34 +8,47 @@
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
-var GamePlayUI = cc.Class({
+cc.Class({
     extends: cc.Component,
-    static:{
-        instance: null
-    },
 
     properties: {
+        time:{
+            default: 1.0,
+            type: Number,
+        },
+
+        sprite:{
+            default: null,
+            type: cc.Sprite,
+        }
     },
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad () {
-        this.instance = this
-    },
+     onLoad () {
+         cc.log("rush loaded!!")
+     },
 
     onDestroy(){
-        this.instance = null
+        cc.log("rush destroy!!")
     },
 
     start () {
-
+        let self = this
+        cc.log('## before !!!!')
+        let seq = cc.sequence(
+            cc.fadeIn(self.time*0.1),
+            cc.delayTime(self.time*0.9),
+            cc.fadeOut(0.1),
+            cc.callFunc(
+                function(){
+                    self.node.destroy()                   
+                }
+            )
+        )
+        cc.log('## after !!!!')
+        self.node.runAction(seq)
     },
-
-    onBackButtonClick(event){
-        cc.director.loadScene('levelSelect')
-    }
 
     // update (dt) {},
 });
-
-module.exports = GamePlayUI
