@@ -246,19 +246,23 @@ var GamePlay = cc.Class({
         // 按照间隔依次拾取
         for (let i=0; i<numTiles; i++)
         {
-            self.scheduleOnce(
-                function(){
-                    let c = coords[i]
-                    let coordIdx = self.coordToIndex(c)
-                    
-                    if (self.pickables[coordIdx]){
-                        let pickable = self.pickables[coordIdx]
-                        self.pickables[coordIdx] = false
+            let c = coords[i]
+            let coordIdx = self.coordToIndex(c)
+            
+            if (self.pickables[coordIdx]){
+                let pickable = self.pickables[coordIdx]
+                self.pickables[coordIdx] = false
+
+                let seq = cc.sequence(
+                    cc.delayTime((i+1)*movingSpeed),
+                    cc.callFunc(function(){
                         pickable.node.destroy();
-                    }                
-                }, (i+1)*movingSpeed
-            )            
-        }
+                    })
+                )
+                pickable.node.runAction(seq)
+
+            }      
+         }
 
         // 英雄移动
         cc.log('moving hero')
@@ -288,12 +292,11 @@ var GamePlay = cc.Class({
             else if (y > 0) newNode.rotation = 90
             else if (y < 0) newNode.rotation = 270
 
-
-            var HeroRush = require('Effect/HeroRush')
+            var HeroRush = require('HeroRush')
             let rush = newNode.getComponent(HeroRush)
-            rush.time = totalTime
+            rush.run(totalTime)
         });
-
+        
     },
 
     // 获取 tile 类型 wall / floor

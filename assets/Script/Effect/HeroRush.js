@@ -12,11 +12,6 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        time:{
-            default: 1.0,
-            type: Number,
-        },
-
         sprite:{
             default: null,
             type: cc.Sprite,
@@ -25,28 +20,32 @@ cc.Class({
 
     // LIFE-CYCLE CALLBACKS:
 
-     onLoad () {
-         cc.log("rush loaded!!")
-     },
+    onLoad () {
+    },
 
     onDestroy(){
-        cc.log("rush destroy!!")
     },
 
     start () {
+
+    },
+
+    run(time){
+        cc.log("run:", time)
         let self = this
-        cc.log('## before !!!!')
+        self.time = time       
+
         let seq = cc.sequence(
             cc.fadeIn(self.time*0.1),
             cc.delayTime(self.time*0.9),
-            cc.fadeOut(0.1),
+            cc.fadeOut(self.time*0.1+0.1),
             cc.callFunc(
                 function(){
                     self.node.destroy()                   
                 }
             )
         )
-        cc.log('## after !!!!')
+
         self.node.runAction(seq)
     },
 
