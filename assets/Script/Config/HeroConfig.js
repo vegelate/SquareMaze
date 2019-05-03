@@ -8,34 +8,34 @@
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
-var GamePlayUI = cc.Class({
+cc.Class({
     extends: cc.Component,
-    static:{
-        instance: null
-    },
 
     properties: {
+        // foo: {
+        //     // ATTRIBUTES:
+        //     default: null,        // The default value will be used only when the component attaching
+        //                           // to a node for the first time
+        //     type: cc.SpriteFrame, // optional, default is typeof default
+        //     serializable: true,   // optional, default is true
+        // },
+        // bar: {
+        //     get () {
+        //         return this._bar;
+        //     },
+        //     set (value) {
+        //         this._bar = value;
+        //     }
+        // },
     },
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad () {
-        this.instance = this
-    },
-
-    onDestroy(){
-        this.instance = null
-    },
+    // onLoad () {},
 
     start () {
 
     },
 
-    onBackButtonClick(event){
-        cc.director.loadScene('levelSelect')
-    }
-
     // update (dt) {},
 });
-
-module.exports = GamePlayUI
