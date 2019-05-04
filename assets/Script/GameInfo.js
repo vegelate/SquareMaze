@@ -53,9 +53,13 @@ var GameInfo = cc.Class({
 
     loadUserData(){
 
+        wx.getFriendCloudStorage()
     },
 
     saveUserData(){
+        let KVDataList = new Array();
+        
+        wx.setUserCloudStroage(Object)
     },
 
     start () {
