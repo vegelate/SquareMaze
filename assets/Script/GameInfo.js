@@ -51,6 +51,13 @@ var GameInfo = cc.Class({
         self.levelStars[self.levelIndex] = stars
     },
 
+    loadUserData(){
+
+    },
+
+    saveUserData(){
+    },
+
     start () {
 
     },
