@@ -42,7 +42,13 @@ var GameInfo = cc.Class({
         cc.game.addPersistRootNode(this.node)
 
         self.AP = 10;  // 体力值
+        self.levelIndex = 1;    // 当前进行的关卡
+        self.levelStars = {};   // 每关的通关成绩
+    },
 
+    onLevelWin(stars){
+        let self = this
+        self.levelStars[self.levelIndex] = stars
     },
 
     start () {

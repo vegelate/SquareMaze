@@ -281,7 +281,13 @@ var GamePlay = cc.Class({
 
                 // 判断关卡结束
                 if (coord.equals(self.endCoord)){
-                    cc.director.loadScene('levelSelect')
+                    var GamePlayUI = require('GamePlayUI');
+                    let stars = 3
+                    if (GameInfo.instance){
+                        GameInfo.instance.onLevelWin(stars)                       
+                    }
+                    GamePlayUI.instance.win(stars)
+                    //cc.director.loadScene('levelSelect')
                 }
             }))
         self.hero.node.runAction(seq)
