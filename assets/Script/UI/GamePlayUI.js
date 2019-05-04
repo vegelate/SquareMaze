@@ -15,12 +15,17 @@ var GamePlayUI = cc.Class({
     },
 
     properties: {
+        pausePanel:{
+            default:null,
+            type:cc.Node,
+        }
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
         this.instance = this
+        this.pausePanel.active = false
     },
 
     onDestroy(){
@@ -31,9 +36,33 @@ var GamePlayUI = cc.Class({
 
     },
 
-    onBackButtonClick(event){
+    onPauseButtonClick(event){
+        //cc.director.loadScene('levelSelect')
+        this.pausePanel.active = true
+    },
+
+    onHomeButtonClick(event){
+
+    },
+
+    onSoundButtonClick(event){
+
+    },
+
+    onLevelSelectButtonClick(event){
         cc.director.loadScene('levelSelect')
-    }
+    },
+
+    onReplayButtonClick(event){
+        cc.director.loadScene('game')
+    },
+
+    onContinueButtonClick(event){   
+        this.pausePanel.active = false
+
+    },
+
+
 
     // update (dt) {},
 });
