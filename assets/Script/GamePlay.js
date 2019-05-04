@@ -43,12 +43,12 @@ var GamePlay = cc.Class({
         self.pickables = {} // 可拾取物， coord_idx - item
 
         this.node.on(cc.Node.EventType.TOUCH_START, function ( event ) {
-            console.log('Touch Start');
+            cc.log('Touch Start');
             self.onTouchStart(event.getLocationX(), event.getLocationY())
           });
 
         this.node.on(cc.Node.EventType.TOUCH_END, function ( event ) {
-            console.log('Touch End');
+            cc.log('Touch End');
             self.onTouchEnd(event.getLocationX(), event.getLocationY())
           });
 

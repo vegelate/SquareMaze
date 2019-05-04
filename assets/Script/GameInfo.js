@@ -37,13 +37,21 @@ var GameInfo = cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        let self = this;
-        GameInfo.instance = this;
-        cc.game.addPersistRootNode(this.node)
+        cc.log("GameInfo onLoad:", this)
 
-        self.AP = 10;  // 体力值
-        self.levelIndex = 1;    // 当前进行的关卡
-        self.levelStars = {};   // 每关的通关成绩
+        let self = this;
+        if (!GameInfo.instance){
+            GameInfo.instance = this;
+            cc.game.addPersistRootNode(this.node)
+
+            self.AP = 10;  // 体力值
+            self.levelIndex = 1;    // 当前进行的关卡
+            self.levelStars = {};   // 每关的通关成绩            
+        }else{
+            cc.log("already have game info, destroy!")
+            self.node.destroy()
+        }
+
     },
 
     onLevelWin(stars){
@@ -58,7 +66,7 @@ var GameInfo = cc.Class({
 
     saveUserData(){
         let KVDataList = new Array();
-        
+
         wx.setUserCloudStroage(Object)
     },
 

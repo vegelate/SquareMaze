@@ -25,6 +25,16 @@ cc.Class({
             type: cc.Label,
         },
 
+        headIcon:{
+            default:null,
+            type:cc.Sprite,
+        },
+
+        nameLabel:{
+            default:null,
+            type:cc.Label,
+        },
+
         elementRoot:{
             default:null,
             type:cc.Node,
@@ -35,21 +45,7 @@ cc.Class({
             type:cc.Prefab,
         },
 
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
+        
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -57,6 +53,26 @@ cc.Class({
     onLoad () {
         let self = this
         
+        // 显示头像
+        if (CC_WECHATGAME) {
+            cc.log("CC_WECHATGAME")
+            if (GameInfo.instance.userInfo){
+                cc.log("## Have user info")
+                let imgPath = GameInfo.instance.userInfo.headImg
+                let name = GameInfo.instance.userInfo.nickName
+                cc.log(name, imgPath)
+
+                self.setImage(self.headIcon, imgPath)
+                self.nameLabel.string = name
+            }else
+            {
+                cc.log("No userInfo!!")
+            }
+        }
+        else{
+            cc.log("## Not wechatgame!")
+        }
+
         cc.log("## len:", LevelConfig.length)
         // 根据关卡配置和通关信息，初始化关卡按钮
         for (let i=1; i<LevelConfig.length; i++){
@@ -83,6 +99,20 @@ cc.Class({
             label.getComponent(cc.Label).string = cfg.id
 
         }
+    },
+
+    setImage(sprite, url) {
+        if (!url) return false;
+        if (typeof (wx) == "undefined") return false;
+        let image = wx.createImage();
+        image.onload = function () {
+            let texture = new cc.Texture2D();
+            texture.initWithElement(image);
+            texture.handleLoadedTexture();
+            sprite.spriteFrame = new cc.SpriteFrame();
+            sprite.spriteFrame.setTexture(texture);
+        };
+        image.src = url;
     },
 
     start () {
