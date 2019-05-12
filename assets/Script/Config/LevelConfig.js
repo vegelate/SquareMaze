@@ -21,7 +21,7 @@ var levelConfig = [
 
     {
         id: 2,
-        path : "map/2",
+        path : "map/2_test",
     },
 
     {

@@ -64,7 +64,7 @@
   <object id="16" x="409.333" y="413.333" width="29.3333" height="25.3333"/>
   <object id="17" x="262.667" y="657.333" width="26.6667" height="28"/>
  </objectgroup>
- <objectgroup name="Diamond" visible="0">
+ <objectgroup name="Star">
   <object id="11" x="110" y="259" width="32" height="35">
    <ellipse/>
   </object>

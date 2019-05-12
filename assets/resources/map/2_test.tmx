@@ -47,6 +47,7 @@
 </data>
  </layer>
  <objectgroup name="Coin"/>
+ <objectgroup name="Star"/>
  <objectgroup name="Actor" opacity="0.79">
   <object id="5" name="Hero" x="75" y="225" width="10" height="10"/>
   <object id="6" name="End" x="73.5" y="73.5"/>

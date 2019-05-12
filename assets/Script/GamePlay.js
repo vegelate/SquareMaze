@@ -11,6 +11,7 @@
 var GameInfo = require('GameInfo')
 var Hero = require("Hero")
 var Pickable = require("Pickable")
+var LevelConfig = require('LevelConfig')
 
 var GamePlay = cc.Class({
     extends: cc.Component,
@@ -63,7 +64,8 @@ var GamePlay = cc.Class({
 
         // 加载地图
         if (GameInfo.instance != null && GameInfo.instance.levelIndex != null){
-            let mapPath = "map/" + GameInfo.instance.levelIndex
+            let levelCfg = LevelConfig[GameInfo.instance.levelIndex]
+            let mapPath = levelCfg.path
             cc.log("mapPath:", mapPath)
             self.loadMap(mapPath) // 不用加扩展名 .tmx
         }else if (self.map != null){
@@ -173,48 +175,67 @@ var GamePlay = cc.Class({
         
     },
 
+    // 出生一种可收集物
+    spawnOneKindPickables(prefabPath, objs, callback){
+        let self = this
+
+        cc.loader.loadRes(prefabPath, function (err, prefab) {
+
+            // 遍历 coin 配置
+            for (var i=0; i<objs.length; i++){
+                let obj = objs[i]
+                cc.log('coin:', obj.toString(), obj.x, obj.y, obj.width, obj.height);
+    
+                // 判断是横向还是纵向
+                let offset = null
+                let num = 0 // 出生的 coin 数量
+                if (obj.width > obj.height){
+                    offset = cc.v2(1, 0)
+                    num = Math.ceil(obj.width / self.tileSize.width)
+                }else{
+                    offset = cc.v2(0, 1)
+                    num = Math.ceil(obj.height / self.tileSize.height)
+                }
+    
+                // 出生一排对象
+                let startCoord = self.posToCoord(cc.v2(obj.x, obj.y))
+                for (var j=0; j<num; j++){
+                    let coord = startCoord.add(offset.mul(j))     
+                    let coordIdx = self.coordToIndex(coord)                    
+                    
+                    if (self.pickables[coordIdx] == null){
+                        var newNode = cc.instantiate(prefab);
+
+                        newNode.position = self.coordToPos(coord)
+                        self.playLayer.node.addChild(newNode);
+    
+                        self.pickables[coordIdx] = newNode.getComponent(Pickable)                        
+                    }
+                }
+            }
+    
+            if (callback)
+            {
+                callback();
+            }
+        });
+    },
+
     // 出生可收集物
     spawnPickable(){
         let self = this
 
+        // 出生 star
+        self.starGroup = self.map.getObjectGroup("Star")
+        var objs = self.starGroup.getObjects()
+
+        self.spawnOneKindPickables("prefab/star", objs, function(){
         // 出生 coin
-        self.coinGroup = self.map.getObjectGroup("Coin")   // TiledObjectGroup
-        var objs = self.coinGroup.getObjects()       
+            self.coinGroup = self.map.getObjectGroup("Coin")   // TiledObjectGroup
+            objs = self.coinGroup.getObjects()    
 
-        cc.loader.loadRes('prefab/coin', function (err, prefab) {
-
-        // 遍历 coin 配置
-        for (var i=0; i<objs.length; i++){
-            let obj = objs[i]
-            cc.log('coin:', obj.toString(), obj.x, obj.y, obj.width, obj.height);
-
-            // 判断是横向还是纵向
-            let offset = null
-            let num = 0 // 出生的 coin 数量
-            if (obj.width > obj.height){
-                offset = cc.v2(1, 0)
-                num = Math.ceil(obj.width / self.tileSize.width)
-            }else{
-                offset = cc.v2(0, 1)
-                num = Math.ceil(obj.height / self.tileSize.height)
-            }
-
-            // 出生一排金币
-            let startCoord = self.posToCoord(cc.v2(obj.x, obj.y))
-            for (var j=0; j<num; j++){
-                var newNode = cc.instantiate(prefab);
-                let coord = startCoord.add(offset.mul(j))
-                newNode.position = self.coordToPos(coord)
-                self.playLayer.node.addChild(newNode);
-
-                let coordIdx = self.coordToIndex(coord)
-                self.pickables[coordIdx] = newNode.getComponent(Pickable)
-
-            }
-        }
-
-        });
-
+            self.spawnOneKindPickables("prefab/coin", objs)
+        })
     },
 
     moveHero(x, y){

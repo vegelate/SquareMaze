@@ -58,7 +58,7 @@
   <object id="8" x="113" y="164" width="23" height="282"/>
   <object id="9" x="170" y="159" width="265" height="32"/>
  </objectgroup>
- <objectgroup name="Diamond">
+ <objectgroup name="Star">
   <object id="11" x="110" y="259" width="32" height="35">
    <ellipse/>
   </object>
