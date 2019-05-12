@@ -9,6 +9,7 @@
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 var GameInfo = require('GameInfo')
 var LevelConfig = require('LevelConfig')
+var Helper = require ('Helper')
 
 var GamePlayUI = cc.Class({
     extends: cc.Component,
@@ -25,6 +26,10 @@ var GamePlayUI = cc.Class({
             default:null,
             type:cc.Node,
         },
+        starSpriteFrame:{
+            default:null,
+            type:cc.SpriteFrame,
+        }
 
     },
 
@@ -49,8 +54,25 @@ var GamePlayUI = cc.Class({
         this.pausePanel.active = true
     },
 
-    win(stars){
+    win(stars, scores){
+        let self = this;
+
         this.winPanel.active = true
+
+        // 设置星
+        let frameRoot = self.winPanel.getChildByName('Frame')
+        let starRoot = frameRoot.getChildByName('stars')
+
+        for (let i=0; i<stars; i++){
+            let sprite = starRoot.children[i].getComponent(cc.Sprite);
+            sprite.spriteFrame = self.starSpriteFrame
+           
+            if (i>=2)
+                break;
+        }
+
+        // 设置分数
+
     },
 
     // 主界面

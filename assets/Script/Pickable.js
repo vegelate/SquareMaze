@@ -27,6 +27,13 @@ cc.Class({
         //         this._bar = value;
         //     }
         // },
+        star:{
+            default: 0,
+        },
+
+        score:{
+            default: 0,
+        }
     },
 
     // LIFE-CYCLE CALLBACKS:

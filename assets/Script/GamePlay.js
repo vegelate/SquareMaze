@@ -72,6 +72,9 @@ var GamePlay = cc.Class({
             self.onMapLoaded()
         }
 
+        // 初始化得分
+        self.stars = 0;
+        self.scores = 0;
     },
 
     loadMap(path){
@@ -281,6 +284,10 @@ var GamePlay = cc.Class({
                 let seq = cc.sequence(
                     cc.delayTime((i+1)*movingSpeed),
                     cc.callFunc(function(){
+                        self.stars += pickable.star
+                        self.scores += pickable.score
+
+                        cc.log("stars:",self.stars," , scores:", self.scores)
                         pickable.node.destroy();
                     })
                 )
@@ -303,11 +310,11 @@ var GamePlay = cc.Class({
                 // 判断关卡结束
                 if (coord.equals(self.endCoord)){
                     var GamePlayUI = require('GamePlayUI');
-                    let stars = 3
+                    
                     if (GameInfo.instance){
-                        GameInfo.instance.onLevelWin(stars)                       
+                        GameInfo.instance.onLevelWin(self.stars)                       
                     }
-                    GamePlayUI.instance.win(stars)
+                    GamePlayUI.instance.win(self.stars, self.scores)
                     //cc.director.loadScene('levelSelect')
                 }
             }))
