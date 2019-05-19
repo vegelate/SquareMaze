@@ -31,6 +31,10 @@ cc.Class({
             type:cc.Prefab,
         },
 
+        spriteLevelLocked:{
+            default:null,
+            type:cc.SpriteFrame,
+        },
         
     },
 
@@ -42,6 +46,7 @@ cc.Class({
         // 填充顶部条
         let topBarRoot = Helper.find(self.node, 'Layout/Top')
         Helper.fillCommonTopBar(topBarRoot)
+        let gameInfo = GameInfo.instance
 
         cc.log("## len:", LevelConfig.length)
         // 根据关卡配置和通关信息，初始化关卡按钮
@@ -59,18 +64,22 @@ cc.Class({
             let label = element.getChildByName('Label')
 
             // 按钮
-            icon.on('click', function(){
+            if (i - gameInfo.latestLevel > 1){
+                // 未解锁关卡
+                icon.getComponent(cc.Sprite).spriteFrame = self.spriteLevelLocked;
+            }
+            else{
+                icon.on('click', function(){
+                    Helper.buttonClickEffect(icon, function(){
+                        if (!Helper.gotoLevel(cfg.id)){
+                            // todo 提示 ap 不足
+                        }
+                    })
+                }, self);
 
-                // todo 消耗 ap
-
-                GameInfo.instance.levelIndex = cfg.id
-                cc.director.loadScene('game', function(err, data){
-                })
-
-            }, self);
-
-            // 关卡索引
-            label.getComponent(cc.Label).string = cfg.id
+                // 关卡索引
+                label.getComponent(cc.Label).string = cfg.id                
+            }
 
             // Star
             let iStar = GameInfo.instance.getLevelStar(i);

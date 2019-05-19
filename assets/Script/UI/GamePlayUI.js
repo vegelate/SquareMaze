@@ -39,6 +39,8 @@ var GamePlayUI = cc.Class({
         GamePlayUI.instance = this
         this.pausePanel.active = false
         this.winPanel.active = false
+
+        GameInfo.instance.setCommonTopBar(null)
     },
 
     onDestroy(){
@@ -120,8 +122,7 @@ var GamePlayUI = cc.Class({
 
         let nextIdx = GameInfo.instance.levelIndex + 1
         if (LevelConfig[nextIdx] != null){
-            GameInfo.instance.levelIndex = nextIdx;
-            cc.director.loadScene('game')
+            Helper.gotoLevel(nextIdx);
         }
         else{
             cc.error("没有下一关了!")

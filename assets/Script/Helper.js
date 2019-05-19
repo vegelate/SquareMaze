@@ -51,6 +51,7 @@ var Helper = cc.Class({
             // home button
             let gameInfo = require('GameInfo').instance
             let GlobalConfig = require('GlobalConfig')
+            gameInfo.setCommonTopBar(root);
 
             let homeButton = root.getChildByName('HomeButton');
             homeButton.on('click', function(){
@@ -61,6 +62,11 @@ var Helper = cc.Class({
             // ap
             let apLabel = Helper.find(root, 'ActionPointPanel/Label').getComponent(cc.Label);
             apLabel.string = "" + gameInfo.AP + "/" + GlobalConfig.ApMax
+            if (gameInfo.AP > GlobalConfig.ApConsume){
+                apLabel.color = cc.Color.RED;
+            }else{
+                apLabel.color = cc.Color.WHITE;
+            }
 
             // add ap button
             let addApButton = Helper.find(root, 'ActionPointPanel/main_button_002')
@@ -92,9 +98,39 @@ var Helper = cc.Class({
             }
         },
 
+        // 按钮点击效果
+        buttonClickEffect(root, callback){
 
-    },
+            var seq = cc.sequence(
+                cc.scaleTo(0.15, 1.1, 1.1),
+                cc.scaleTo(0.15, 1.0, 1.0),
+                cc.callFunc(callback)
+            );
 
+            root.runAction(seq);
+        },  
+
+        // 进入关卡, 返回是否成功
+        gotoLevel(index){
+            let LevelConfig = require('LevelConfig')
+            let gameInfo = require('GameInfo').instance
+            let GlobalConfig = require('GlobalConfig')
+
+            if (LevelConfig[index] != null){
+
+                if (gameInfo.AP > GlobalConfig.ApConsume){
+                    gameInfo.consumeAP(GlobalConfig.ApConsume);
+
+                    gameInfo.levelIndex = index;
+                    cc.director.loadScene('game')
+                }
+                else{
+                    // todo: 提示 ap 不足
+
+                }
+            }
+        },
+    },  // static
 
 });
 

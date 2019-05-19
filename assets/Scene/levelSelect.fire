@@ -15,9 +15,6 @@
     "_children": [
       {
         "__id__": 2
-      },
-      {
-        "__id__": 95
       }
     ],
     "_active": true,
@@ -2515,7 +2512,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 41.37,
+      "width": 8,
       "height": 108.8
     },
     "_anchorPoint": {
@@ -2560,8 +2557,8 @@
     "_enabled": true,
     "_materials": [],
     "_useOriginalSize": false,
-    "_string": "1",
-    "_N$string": "1",
+    "_string": "",
+    "_N$string": "",
     "_fontSize": 60,
     "_lineHeight": 80,
     "_enableWrapText": true,
@@ -3257,23 +3254,17 @@
       "__id__": 3
     },
     "_enabled": true,
-    "labelAP": {
-      "__id__": 22
-    },
     "labelStarts": {
       "__id__": 82
-    },
-    "headIcon": {
-      "__id__": 28
-    },
-    "nameLabel": {
-      "__id__": 31
     },
     "elementRoot": {
       "__id__": 41
     },
     "elementPrefab": {
       "__uuid__": "737137aa-d14c-488a-841f-bbf21e793816"
+    },
+    "spriteLevelLocked": {
+      "__uuid__": "345110ec-cdfa-426d-baf1-652d0c27dc16"
     },
     "_id": "75RLeCLyhKe7icvJwzhbES"
   },
@@ -3398,74 +3389,5 @@
     "_fitWidth": true,
     "_fitHeight": true,
     "_id": "5cCTRdXD1Cm4772ARPoVM4"
-  },
-  {
-    "__type__": "cc.Node",
-    "_name": "Global",
-    "_objFlags": 0,
-    "_parent": {
-      "__id__": 1
-    },
-    "_children": [],
-    "_active": true,
-    "_level": 1,
-    "_components": [
-      {
-        "__id__": 96
-      }
-    ],
-    "_prefab": null,
-    "_opacity": 255,
-    "_color": {
-      "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
-      "a": 255
-    },
-    "_contentSize": {
-      "__type__": "cc.Size",
-      "width": 0,
-      "height": 0
-    },
-    "_anchorPoint": {
-      "__type__": "cc.Vec2",
-      "x": 0.5,
-      "y": 0.5
-    },
-    "_position": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_scale": {
-      "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
-      "z": 1
-    },
-    "_quat": {
-      "__type__": "cc.Quat",
-      "x": 0,
-      "y": 0,
-      "z": 0,
-      "w": 1
-    },
-    "_skewX": 0,
-    "_skewY": 0,
-    "_is3DNode": false,
-    "groupIndex": 0,
-    "_id": "911ID+0htEEZ+7anDfHoVd"
-  },
-  {
-    "__type__": "71b34tCGF9Ll6rqD+Foft7m",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 95
-    },
-    "_enabled": true,
-    "_id": "10FnHwmFxOcou9UjizK1a7"
   }
 ]

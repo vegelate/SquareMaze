@@ -9,7 +9,8 @@
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
-var globalConfig = require('GlobalConfig')
+var GlobalConfig = require('GlobalConfig')
+var Helper = require('Helper')
 
 // 全局游戏信息
 var GameInfo = cc.Class({
@@ -46,6 +47,19 @@ var GameInfo = cc.Class({
             self.node.destroy()
         }
 
+    },
+
+    // 通用的顶部条
+    setCommonTopBar(node){
+        this.commonTopBar = node;
+    },
+
+    // 消耗 ap
+    consumeAP(num){
+        let self = this
+
+        self.AP -= num;
+        self.saveData('AP', self.AP);
     },
 
     onLevelWin(stars, scores, apRecover){
@@ -183,18 +197,25 @@ var GameInfo = cc.Class({
     // 尝试恢复 AP
     tryRecoverAP(){
         let self = this
+        if (self.AP >= GlobalConfig.ApMax){
+            return false;
+        }
+
 
         let curr_time = (new Date).getTime() * 0.001
         let pass_sec = curr_time - self.ApRecoverTime;
-        let num = Math.floor(pass_sec / globalConfig.ApRecoverTime) // 要恢复的点数
+        let num = Math.floor(pass_sec / GlobalConfig.ApRecoverTime) // 要恢复的点数
 
         if (num > 0){
             // 要恢复
-            self.AP = Math.min(globalConfig.ApMax, self.AP + num)
+            self.AP = Math.min(GlobalConfig.ApMax, self.AP + num)
             self.ApRecoverTime = curr_time
-            return true, globalConfig.ApRecoverTime
+
+            return true
+
         }else{
-            return false, globalConfig.ApRecoverTime - pass_sec
+
+            return false
         }
     },
 
@@ -209,14 +230,44 @@ var GameInfo = cc.Class({
         self.elapsed = self.elapsed + dt
         // 每秒尝试恢复一次 ap
         if (self.elapsed > 1.0){
-            let recoverd = false
-            self.isApRecoverd, self.recoverLeftTime = self.tryRecoverAP()
 
-           // cc.log("is recovered:",self.isApRecoverd,", left time:",self.recoverLeftTime)
+            self.isApRecoverd = self.tryRecoverAP();
+
+            if (self.isApRecoverd){
+                //cc.log("kkk");
+                self.updateTopBar()
+            }
+
+            //cc.log("is recovered:",self.isApRecoverd,", left time:",self.recoverLeftTime)
             self.elapsed = 0.0
         }
     },
 
+    updateTopBar(){
+        let self = this
+
+        if (self.commonTopBar){
+
+            let go = Helper.find(self.commonTopBar, 'ActionPointPanel/Label');
+            let seq = cc.sequence(
+                cc.scaleTo(0.15, 1.1, 1.1),
+                cc.callFunc(function(){
+                    if (self.commonTopBar){
+                        let label = go.getComponent(cc.Label)
+                        label.string = "" + self.AP + "/" + GlobalConfig.ApMax
+
+                        if (self.AP > GlobalConfig.ApConsume){
+                            label.color = cc.Color.RED;
+                        }else{
+                            label.color = cc.Color.WHITE;
+                        }                        
+                    }
+                }),
+                cc.scaleTo(0.15, 1, 1)
+            );
+            go.runAction(seq);
+        }
+    },
 
 });
 

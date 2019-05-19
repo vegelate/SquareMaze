@@ -80,7 +80,7 @@ cc.Class({
                                 userInfo.headImg = userdata.avatarUrl;
                                 GameInfo.instance.userInfo = userInfo;
                                 res.code = res1.code;
-                                self.login(res);
+                                //self.login(res);
                             })
                         }
                         else {
@@ -147,7 +147,10 @@ cc.Class({
     onClickLogin() {
         let self = this
 
-        self.login()
+        let btn = Helper.find(self.node, 'Bottom/LoginButton');
+        Helper.buttonClickEffect(btn, function(){
+            self.login()            
+        })
     },
 
     // update (dt) {},
