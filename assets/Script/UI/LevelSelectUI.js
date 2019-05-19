@@ -9,6 +9,7 @@
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 var GameInfo = require("GameInfo")
 var LevelConfig = require('LevelConfig')
+var Helper = require('Helper')
 
 cc.Class({
     extends: cc.Component,
@@ -76,13 +77,10 @@ cc.Class({
         cc.log("## len:", LevelConfig.length)
         // 根据关卡配置和通关信息，初始化关卡按钮
         for (let i=1; i<LevelConfig.length; i++){
-            let element = null
-            if (self.elementRoot.childrenCount >= i){
-                element = self.elementRoot.children[i-1]
-            }else{
-                element =cc.instantiate(self.elementPrefab);
-                self.elementRoot.addChild(element);
-            }
+
+            // 找到 element
+            let element = Helper.getOrCloneElement(
+                    self.elementRoot, self.elementPrefab, i);
 
             let cfg = LevelConfig[i]
             cc.log("##:", cfg.id,",",cfg.path)
@@ -96,8 +94,20 @@ cc.Class({
                 cc.director.loadScene('game', function(err, data){
                 })
             }, self);
+
+            // 关卡索引
             label.getComponent(cc.Label).string = cfg.id
 
+            // Star
+            let iStar = GameInfo.instance.getLevelStar(i);
+            let stars = {}
+            stars[0] = element.getChildByName('Star0');
+            stars[1] = element.getChildByName('Star1');
+            stars[2] = element.getChildByName('Star2');
+            stars[3] = element.getChildByName('Star3');
+            for (let j=0; j<4; j++){
+                stars[j].active = (iStar == j)
+            }
         }
     },
 

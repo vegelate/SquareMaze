@@ -88,7 +88,7 @@ cc.Class({
                                     var userInfo = {}
                                     userInfo.nickName = userdata.nickName;
                                     userInfo.headImg = userdata.avatarUrl;
-                                    GameInfo.instance.userInfo = userInfo;
+                                    GameInfo.instance.userInfo = userInfo;  // 记录到 game info
 
                                     res.code = res1.code;
                                     self.login(res);

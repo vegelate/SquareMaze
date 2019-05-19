@@ -40,7 +40,7 @@ var GameInfo = cc.Class({
             self.levelStars = {};   // 每关的通关成绩  
             self.ApRecoverTime = (new Date).getTime() * 0.001 // 上次的恢复时间,1970 秒数
             
-            //self.loadUserData()
+            self.loadUserData()
         }else{
             cc.log("already have game info, destroy!")
             self.node.destroy()
@@ -48,8 +48,9 @@ var GameInfo = cc.Class({
 
     },
 
-    onLevelWin(stars){
+    onLevelWin(stars, scores){
         let self = this
+
         if (!self.levelStars[self.levelIndex] || 
             stars > self.levelStars[self.levelIndex]){
                 self.levelStars[self.levelIndex] = stars                
@@ -59,18 +60,25 @@ var GameInfo = cc.Class({
             self.latestLevel = self.levelIndex; // 设置关卡进度
         }
 
+        if (scores){
+            self.coin += scores;    // 加金币
+        }
+
         self.saveUserData()
     },
 
-    loadData(key){
-        try{
-            return wx.getStoraageSync(key);
-        }
-        catch(e){
-            return null;
-        }  
+
+    // 获取通关的星数
+    getLevelStar(index){
+        let self = this
+        
+        if (index > self.latestLevel)
+            return -1
+        else
+            return self.levelStars[index]
     },
 
+    // 读取所有用户数据
     loadUserData(){
         let self = this    
         
@@ -91,6 +99,15 @@ var GameInfo = cc.Class({
                 self.tryRecoverAP()
             }
 
+            let strJson = self.loadData('levelStars');
+            if (strJson){
+                let tmp = JSON.parse(strJson);
+                if (tmp){
+                    self.levelStars = tmp;
+                    cc.log("parse json success!")
+                }                
+            }
+
             /*
             wx.getUserCloudStorage({
                 keyList: ['levelStars'],
@@ -108,30 +125,20 @@ var GameInfo = cc.Class({
         }
     },
 
-    // 尝试恢复 AP
-    tryRecoverAP(){
-        let self = this
-
-        let curr_time = (new Date).getTime() * 0.001
-        let pass_sec = curr_time - self.ApRecoverTime;
-        let num = Math.floor(pass_sec / globalConfig.ApRecoverTime) // 要恢复的点数
-
-        if (num > 0){
-            // 要恢复
-            self.AP = Math.min(globalConfig.APMax, self.AP + num)
-            self.ApRecoverTime = curr_time
-            return true, globalConfig.ApRecoverTime
-        }else{
-            return false, globalConfig.ApRecoverTime - pass_sec
-        }
-    },
-
+    // 保存所有用户数据
     saveUserData(){
         let self = this;
 
         if (CC_WECHATGAME){
             
-            wx.localStorage
+            self.setData('AP', self.AP);
+            self.setData('coin', self.coin);
+            self.setData('latestLevel', self.latestLevel);
+            self.setData('ApRecoverTime', self.ApRecoverTime);
+
+            let strJson = JSON.stringify(self.levelStars);
+            self.setData("levelStars", strJson);
+
             /*
             let KVDataList =[];
             KVDataList.push(
@@ -150,6 +157,41 @@ var GameInfo = cc.Class({
             */  
         }
 
+    },
+
+    // 读取一条数据
+    loadData(key){
+        try{
+            return wx.getStorageSync(key);
+        }
+        catch(e){
+            return null;
+        }  
+    },
+
+    // 保存一条数据
+    saveData(key, value){
+        try{
+            wx.setStorageSync(key, value)
+        } catch(e){}
+    },
+
+    // 尝试恢复 AP
+    tryRecoverAP(){
+        let self = this
+
+        let curr_time = (new Date).getTime() * 0.001
+        let pass_sec = curr_time - self.ApRecoverTime;
+        let num = Math.floor(pass_sec / globalConfig.ApRecoverTime) // 要恢复的点数
+
+        if (num > 0){
+            // 要恢复
+            self.AP = Math.min(globalConfig.APMax, self.AP + num)
+            self.ApRecoverTime = curr_time
+            return true, globalConfig.ApRecoverTime
+        }else{
+            return false, globalConfig.ApRecoverTime - pass_sec
+        }
     },
 
     start () {

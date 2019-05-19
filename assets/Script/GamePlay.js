@@ -312,7 +312,7 @@ var GamePlay = cc.Class({
                     var GamePlayUI = require('GamePlayUI');
                     
                     if (GameInfo.instance){
-                        GameInfo.instance.onLevelWin(self.stars)                       
+                        GameInfo.instance.onLevelWin(self.stars, self.scores)                       
                     }
                     GamePlayUI.instance.win(self.stars, self.scores)
                     //cc.director.loadScene('levelSelect')
