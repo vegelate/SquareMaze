@@ -15,7 +15,22 @@ var Helper = cc.Class({
                 root.addChild(element);
             }
             return element;
-        }
+        },
+
+        // 从 root 中找到 path 描述的结点 比如 'Panel/Button/text'
+        find(root, path){
+            let sep = path.split('/');
+            let child = root;
+            for (var i=0; i<sep.length; i++){
+                child = child.getChildByName(sep[i])
+                if (!child){
+                    cc.error("Failed to find path:"+path);
+                    return null                    
+                }
+            }
+
+            return child
+        },
     },
 
 

@@ -54,7 +54,7 @@ var GamePlayUI = cc.Class({
         this.pausePanel.active = true
     },
 
-    win(stars, scores){
+    win(stars, scores, apRecover){
         let self = this;
 
         this.winPanel.active = true
@@ -72,7 +72,12 @@ var GamePlayUI = cc.Class({
         }
 
         // 设置分数
+        let scoreLabel = Helper.find(this.winPanel, "Frame/AddCoinPanel/Label").getComponent(cc.Label);
+        scoreLabel.string = "+" +scores
 
+        // 增加的体力
+        let apLabel =  Helper.find(this.winPanel, "Frame/AddAPPanel/Label").getComponent(cc.Label);
+        apLabel.string = "+" +apRecover
     },
 
     // 主界面

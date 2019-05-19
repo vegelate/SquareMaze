@@ -310,11 +310,22 @@ var GamePlay = cc.Class({
                 // 判断关卡结束
                 if (coord.equals(self.endCoord)){
                     var GamePlayUI = require('GamePlayUI');
-                    
-                    if (GameInfo.instance){
-                        GameInfo.instance.onLevelWin(self.stars, self.scores)                       
+                    var GlobalConfig = require('GlobalConfig')
+                    let levelReward = GlobalConfig.LevelReward[self.stars]
+                    if (!levelReward){
+                        levelReward = {
+                            Stars : 0,      // 0 星通关
+                            ApRecover : 0,
+                            Coin : 0,                                
+                        }
                     }
-                    GamePlayUI.instance.win(self.stars, self.scores)
+
+                    self.scores += levelReward.Coin;
+
+                    if (GameInfo.instance){
+                        GameInfo.instance.onLevelWin(self.stars, self.scores, levelReward.ApRecover)                       
+                    }
+                    GamePlayUI.instance.win(self.stars, self.scores, levelReward.ApRecover)
                     //cc.director.loadScene('levelSelect')
                 }
             }))

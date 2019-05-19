@@ -48,7 +48,7 @@ var GameInfo = cc.Class({
 
     },
 
-    onLevelWin(stars, scores){
+    onLevelWin(stars, scores, apRecover){
         let self = this
 
         if (!self.levelStars[self.levelIndex] || 
@@ -64,6 +64,10 @@ var GameInfo = cc.Class({
             self.coin += scores;    // 加金币
         }
 
+        if (apRecover){
+            self.ap += apRecover;   // 加体力
+        }
+        
         self.saveUserData()
     },
 
@@ -71,7 +75,7 @@ var GameInfo = cc.Class({
     // 获取通关的星数
     getLevelStar(index){
         let self = this
-        
+
         if (index > self.latestLevel)
             return -1
         else

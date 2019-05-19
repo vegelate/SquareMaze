@@ -90,9 +90,13 @@ cc.Class({
             let label = element.getChildByName('Label')
 
             icon.on('click', function(){
+
+                // todo 消耗 ap
+
                 GameInfo.instance.levelIndex = cfg.id
                 cc.director.loadScene('game', function(err, data){
                 })
+
             }, self);
 
             // 关卡索引
