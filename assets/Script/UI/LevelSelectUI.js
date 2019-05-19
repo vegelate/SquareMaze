@@ -16,24 +16,9 @@ cc.Class({
 
     properties: {
 
-        labelAP:{
-            default:null,
-            type: cc.Label,
-        },
-
         labelStarts:{
             default:null,
             type: cc.Label,
-        },
-
-        headIcon:{
-            default:null,
-            type:cc.Sprite,
-        },
-
-        nameLabel:{
-            default:null,
-            type:cc.Label,
         },
 
         elementRoot:{
@@ -54,25 +39,9 @@ cc.Class({
     onLoad () {
         let self = this
         
-        // 显示头像
-        if (CC_WECHATGAME) {
-            cc.log("CC_WECHATGAME")
-            if (GameInfo.instance.userInfo){
-                cc.log("## Have user info")
-                let imgPath = GameInfo.instance.userInfo.headImg
-                let name = GameInfo.instance.userInfo.nickName
-                cc.log(name, imgPath)
-
-                self.setImage(self.headIcon, imgPath)
-                self.nameLabel.string = name
-            }else
-            {
-                cc.log("No userInfo!!")
-            }
-        }
-        else{
-            cc.log("## Not wechatgame!")
-        }
+        // 填充顶部条
+        let topBarRoot = Helper.find(self.node, 'Layout/Top')
+        Helper.fillCommonTopBar(topBarRoot)
 
         cc.log("## len:", LevelConfig.length)
         // 根据关卡配置和通关信息，初始化关卡按钮
@@ -89,6 +58,7 @@ cc.Class({
             let icon = element.getChildByName('icon')
             let label = element.getChildByName('Label')
 
+            // 按钮
             icon.on('click', function(){
 
                 // todo 消耗 ap
@@ -115,19 +85,7 @@ cc.Class({
         }
     },
 
-    setImage(sprite, url) {
-        if (!url) return false;
-        if (typeof (wx) == "undefined") return false;
-        let image = wx.createImage();
-        image.onload = function () {
-            let texture = new cc.Texture2D();
-            texture.initWithElement(image);
-            texture.handleLoadedTexture();
-            sprite.spriteFrame = new cc.SpriteFrame();
-            sprite.spriteFrame.setTexture(texture);
-        };
-        image.src = url;
-    },
+
 
     start () {
 

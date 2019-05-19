@@ -33,7 +33,7 @@ var GameInfo = cc.Class({
             cc.game.addPersistRootNode(this.node)
             self.elapsed = 0.0;
 
-            self.AP = 10;   // 体力值
+            self.AP = 100;   // 体力值
             self.coin = 0;  // 游戏币数量
             self.levelIndex = 1;    // 当前进行的关卡
             self.latestLevel = 0;   // 最近完成的关卡
@@ -65,9 +65,9 @@ var GameInfo = cc.Class({
         }
 
         if (apRecover){
-            self.ap += apRecover;   // 加体力
+            self.AP += apRecover;   // 加体力
         }
-        
+
         self.saveUserData()
     },
 
@@ -135,13 +135,13 @@ var GameInfo = cc.Class({
 
         if (CC_WECHATGAME){
             
-            self.setData('AP', self.AP);
-            self.setData('coin', self.coin);
-            self.setData('latestLevel', self.latestLevel);
-            self.setData('ApRecoverTime', self.ApRecoverTime);
+            self.saveData('AP', self.AP);
+            self.saveData('coin', self.coin);
+            self.saveData('latestLevel', self.latestLevel);
+            self.saveData('ApRecoverTime', self.ApRecoverTime);
 
             let strJson = JSON.stringify(self.levelStars);
-            self.setData("levelStars", strJson);
+            self.saveData("levelStars", strJson);
 
             /*
             let KVDataList =[];
@@ -190,7 +190,7 @@ var GameInfo = cc.Class({
 
         if (num > 0){
             // 要恢复
-            self.AP = Math.min(globalConfig.APMax, self.AP + num)
+            self.AP = Math.min(globalConfig.ApMax, self.AP + num)
             self.ApRecoverTime = curr_time
             return true, globalConfig.ApRecoverTime
         }else{
