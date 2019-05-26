@@ -51,11 +51,6 @@ var GamePlayUI = cc.Class({
 
     },
 
-    onPauseButtonClick(event){
-        //cc.director.loadScene('levelSelect')
-        this.pausePanel.active = true
-    },
-
     win(stars, scores, apRecover){
         let self = this;
 
@@ -81,10 +76,21 @@ var GamePlayUI = cc.Class({
         let apLabel =  Helper.find(this.winPanel, "Frame/AddAPPanel/Label").getComponent(cc.Label);
         apLabel.string = "+" +apRecover
     },
+    
+    onPauseButtonClick(event){
+        let self = this
+
+        Helper.buttonClickEffect(Helper.find(self.node, 'PauseButton'), function(){
+            self.pausePanel.active = true
+        });
+    },
 
     // 主界面
     onHomeButtonClick(event){
-
+        let self = this;
+        Helper.buttonClickEffect(Helper.find(self.pausePanel, 'HomeButton'), function(){
+            cc.director.loadScene('main')
+        });
     },
 
     // 声音
@@ -94,18 +100,46 @@ var GamePlayUI = cc.Class({
 
     // 关卡选择
     onLevelSelectButtonClick(event){
-        cc.director.loadScene('levelSelect')
+
+        let self = this;
+
+        if (self.pausePanel.active){
+            Helper.buttonClickEffect(Helper.find(self.pausePanel, 'LevelSelectButton'), function(){
+                cc.director.loadScene('levelSelect')
+            }); 
+        }
+        else if (self.winPanel.active){
+            Helper.buttonClickEffect(Helper.find(self.winPanel, 'Frame/bottom/settlement_button_001'), function(){
+                cc.director.loadScene('levelSelect')
+            }); 
+        }
+
+
+
     },
 
     // 重玩
     onReplayButtonClick(event){
-        cc.director.loadScene('game')
+        let self = this;
+
+        if (self.pausePanel.active){
+            Helper.buttonClickEffect(Helper.find(self.pausePanel, 'ReplayButton'), function(){
+                cc.director.loadScene('game')
+            }); 
+        }
+        else if (self.winPanel.active){
+            Helper.buttonClickEffect(Helper.find(self.winPanel, 'Frame/bottom/settlement_button_002'), function(){
+                cc.director.loadScene('game')
+            }); 
+        }
     },
 
     // 继续
     onContinueButtonClick(event){   
-        this.pausePanel.active = false
-
+        let self = this;
+        Helper.buttonClickEffect(Helper.find(self.pausePanel, 'ContinueButton'), function(){
+            self.pausePanel.active = false
+        });
     },
 
     // 分享
@@ -115,18 +149,21 @@ var GamePlayUI = cc.Class({
 
     // 下一关
     onNextLevelButtonClick(event){
-        if (!GameInfo.instance){
-            cc.error("请从关卡选择启动！")
-            return;
-        }
+        let self = this;
+        Helper.buttonClickEffect(Helper.find(self.winPanel, 'NextLevelButton'), function(){
+            if (!GameInfo.instance){
+                cc.error("请从关卡选择启动！")
+                return;
+            }
 
-        let nextIdx = GameInfo.instance.levelIndex + 1
-        if (LevelConfig[nextIdx] != null){
-            Helper.gotoLevel(nextIdx);
-        }
-        else{
-            cc.error("没有下一关了!")
-        }
+            let nextIdx = GameInfo.instance.levelIndex + 1
+            if (LevelConfig[nextIdx] != null){
+                Helper.gotoLevel(nextIdx);
+            }
+            else{
+                cc.error("没有下一关了!")
+            }            
+        });
     },
 
 

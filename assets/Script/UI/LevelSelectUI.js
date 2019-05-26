@@ -100,13 +100,5 @@ cc.Class({
 
     },
 
-    onClickHome(){
-
-    },
-
-    onClickAddAP(){
-
-    },
-
     // update (dt) {},
 });

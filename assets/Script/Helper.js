@@ -55,8 +55,9 @@ var Helper = cc.Class({
 
             let homeButton = root.getChildByName('HomeButton');
             homeButton.on('click', function(){
-                cc.director.loadScene('main')
-
+                Helper.buttonClickEffect(homeButton, function(){
+                    cc.director.loadScene('main')
+                });
             }, root);
 
             // ap
@@ -71,8 +72,10 @@ var Helper = cc.Class({
             // add ap button
             let addApButton = Helper.find(root, 'ActionPointPanel/main_button_002')
             addApButton.on('click', function(){
-                // todo: 加 ap 逻辑
-                gameInfo.ap++
+                Helper.buttonClickEffect(addApButton, function(){
+                    // todo: 加 ap 逻辑                    
+                    gameInfo.ap++
+                });
             }, root);
 
             if (CC_WECHATGAME) {
@@ -102,8 +105,8 @@ var Helper = cc.Class({
         buttonClickEffect(root, callback){
 
             var seq = cc.sequence(
-                cc.scaleTo(0.15, 1.1, 1.1),
-                cc.scaleTo(0.15, 1.0, 1.0),
+                cc.scaleTo(0.1, 1.1, 1.1),
+                cc.scaleTo(0.1, 1.0, 1.0),
                 cc.callFunc(callback)
             );
 

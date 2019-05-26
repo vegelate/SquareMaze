@@ -1927,9 +1927,9 @@
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 214,
-      "g": 214,
-      "b": 214,
+      "r": 124,
+      "g": 124,
+      "b": 124,
       "a": 255
     },
     "_contentSize": {
@@ -2006,7 +2006,7 @@
     "duration": 0.1,
     "zoomScale": 1.2,
     "clickEvents": [],
-    "_N$interactable": true,
+    "_N$interactable": false,
     "_N$enableAutoGrayEffect": false,
     "_N$transition": 1,
     "transition": 1,
@@ -2098,9 +2098,9 @@
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 214,
-      "g": 214,
-      "b": 214,
+      "r": 124,
+      "g": 124,
+      "b": 124,
       "a": 255
     },
     "_contentSize": {
@@ -2177,7 +2177,7 @@
     "duration": 0.1,
     "zoomScale": 1.2,
     "clickEvents": [],
-    "_N$interactable": true,
+    "_N$interactable": false,
     "_N$enableAutoGrayEffect": false,
     "_N$transition": 1,
     "transition": 1,
@@ -2269,9 +2269,9 @@
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 214,
-      "g": 214,
-      "b": 214,
+      "r": 124,
+      "g": 124,
+      "b": 124,
       "a": 255
     },
     "_contentSize": {
@@ -2348,7 +2348,7 @@
     "duration": 0.1,
     "zoomScale": 1.2,
     "clickEvents": [],
-    "_N$interactable": true,
+    "_N$interactable": false,
     "_N$enableAutoGrayEffect": false,
     "_N$transition": 1,
     "transition": 1,
@@ -2440,9 +2440,9 @@
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 214,
-      "g": 214,
-      "b": 214,
+      "r": 124,
+      "g": 124,
+      "b": 124,
       "a": 255
     },
     "_contentSize": {
@@ -2519,7 +2519,7 @@
     "duration": 0.1,
     "zoomScale": 1.2,
     "clickEvents": [],
-    "_N$interactable": true,
+    "_N$interactable": false,
     "_N$enableAutoGrayEffect": false,
     "_N$transition": 1,
     "transition": 1,
