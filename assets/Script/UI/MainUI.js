@@ -8,6 +8,7 @@
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] https://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 var GameInfo = require("GameInfo")
+var Helper = require('Helper')
 
 cc.Class({
     extends: cc.Component,
@@ -27,6 +28,9 @@ cc.Class({
                 this.getUserInfoBtn()
         }
 
+        // 填充顶部条
+        let topBarRoot = Helper.find(self.node, 'CommonTop')
+        Helper.fillCommonTopBar(topBarRoot)
     },
 
     // 微信授权，获取用户信息
@@ -76,7 +80,7 @@ cc.Class({
                                 userInfo.headImg = userdata.avatarUrl;
                                 GameInfo.instance.userInfo = userInfo;
                                 res.code = res1.code;
-                                self.login(res);
+                                //self.login(res);
                             })
                         }
                         else {
@@ -88,10 +92,14 @@ cc.Class({
                                     var userInfo = {}
                                     userInfo.nickName = userdata.nickName;
                                     userInfo.headImg = userdata.avatarUrl;
-                                    GameInfo.instance.userInfo = userInfo;
+                                    GameInfo.instance.userInfo = userInfo;  // 记录到 game info
 
                                     res.code = res1.code;
-                                    self.login(res);
+
+
+                                    //self.login(res);
+                                    let topBarRoot = Helper.find(self.node, 'CommonTop')
+                                    Helper.fillCommonTopBar(topBarRoot)
                                 }
                             })
                         }
@@ -139,7 +147,10 @@ cc.Class({
     onClickLogin() {
         let self = this
 
-        self.login()
+        let btn = Helper.find(self.node, 'Bottom/LoginButton');
+        Helper.buttonClickEffect(btn, function(){
+            self.login()            
+        })
     },
 
     // update (dt) {},

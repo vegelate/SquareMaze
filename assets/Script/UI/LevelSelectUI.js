@@ -9,30 +9,16 @@
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 var GameInfo = require("GameInfo")
 var LevelConfig = require('LevelConfig')
+var Helper = require('Helper')
 
 cc.Class({
     extends: cc.Component,
 
     properties: {
 
-        labelAP:{
-            default:null,
-            type: cc.Label,
-        },
-
         labelStarts:{
             default:null,
             type: cc.Label,
-        },
-
-        headIcon:{
-            default:null,
-            type:cc.Sprite,
-        },
-
-        nameLabel:{
-            default:null,
-            type:cc.Label,
         },
 
         elementRoot:{
@@ -45,6 +31,10 @@ cc.Class({
             type:cc.Prefab,
         },
 
+        spriteLevelLocked:{
+            default:null,
+            type:cc.SpriteFrame,
+        },
         
     },
 
@@ -53,36 +43,18 @@ cc.Class({
     onLoad () {
         let self = this
         
-        // 显示头像
-        if (CC_WECHATGAME) {
-            cc.log("CC_WECHATGAME")
-            if (GameInfo.instance.userInfo){
-                cc.log("## Have user info")
-                let imgPath = GameInfo.instance.userInfo.headImg
-                let name = GameInfo.instance.userInfo.nickName
-                cc.log(name, imgPath)
-
-                self.setImage(self.headIcon, imgPath)
-                self.nameLabel.string = name
-            }else
-            {
-                cc.log("No userInfo!!")
-            }
-        }
-        else{
-            cc.log("## Not wechatgame!")
-        }
+        // 填充顶部条
+        let topBarRoot = Helper.find(self.node, 'Layout/Top')
+        Helper.fillCommonTopBar(topBarRoot)
+        let gameInfo = GameInfo.instance
 
         cc.log("## len:", LevelConfig.length)
         // 根据关卡配置和通关信息，初始化关卡按钮
         for (let i=1; i<LevelConfig.length; i++){
-            let element = null
-            if (self.elementRoot.childrenCount >= i){
-                element = self.elementRoot.children[i-1]
-            }else{
-                element =cc.instantiate(self.elementPrefab);
-                self.elementRoot.addChild(element);
-            }
+
+            // 找到 element
+            let element = Helper.getOrCloneElement(
+                    self.elementRoot, self.elementPrefab, i);
 
             let cfg = LevelConfig[i]
             cc.log("##:", cfg.id,",",cfg.path)
@@ -91,39 +63,40 @@ cc.Class({
             let icon = element.getChildByName('icon')
             let label = element.getChildByName('Label')
 
-            icon.on('click', function(){
-                GameInfo.instance.levelIndex = cfg.id
-                cc.director.loadScene('game', function(err, data){
-                })
-            }, self);
-            label.getComponent(cc.Label).string = cfg.id
+            // 按钮
+            if (i - gameInfo.latestLevel > 1){
+                // 未解锁关卡
+                icon.getComponent(cc.Sprite).spriteFrame = self.spriteLevelLocked;
+            }
+            else{
+                icon.on('click', function(){
+                    Helper.buttonClickEffect(icon, function(){
+                        if (!Helper.gotoLevel(cfg.id)){
+                            // todo 提示 ap 不足
+                        }
+                    })
+                }, self);
 
+                // 关卡索引
+                label.getComponent(cc.Label).string = cfg.id                
+            }
+
+            // Star
+            let iStar = GameInfo.instance.getLevelStar(i);
+            let stars = {}
+            stars[0] = element.getChildByName('Star0');
+            stars[1] = element.getChildByName('Star1');
+            stars[2] = element.getChildByName('Star2');
+            stars[3] = element.getChildByName('Star3');
+            for (let j=0; j<4; j++){
+                stars[j].active = (iStar == j)
+            }
         }
     },
 
-    setImage(sprite, url) {
-        if (!url) return false;
-        if (typeof (wx) == "undefined") return false;
-        let image = wx.createImage();
-        image.onload = function () {
-            let texture = new cc.Texture2D();
-            texture.initWithElement(image);
-            texture.handleLoadedTexture();
-            sprite.spriteFrame = new cc.SpriteFrame();
-            sprite.spriteFrame.setTexture(texture);
-        };
-        image.src = url;
-    },
+
 
     start () {
-
-    },
-
-    onClickHome(){
-
-    },
-
-    onClickAddAP(){
 
     },
 
