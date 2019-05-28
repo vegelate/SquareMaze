@@ -144,6 +144,18 @@ var GamePlay = cc.Class({
         if (endObj != null){
             let endPos = cc.v2(endObj.x, endObj.y)
             self.endCoord = self.posToCoord(endPos)
+
+            cc.log('endPos:', endPos.toString())
+            cc.log("endCoord:", self.endCoord.toString())
+
+            // 出生结束点
+            cc.loader.loadRes("prefab/endPoint", function (err, prefab) {
+                var newNode = cc.instantiate(prefab);
+                newNode.position =  self.coordToPos(self.endCoord)  
+                self.playLayer.node.addChild(newNode);
+
+            });
+
         }else{
             cc.error("map has no End point!")
         }   
