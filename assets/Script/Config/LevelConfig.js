@@ -16,17 +16,32 @@ var levelConfig = [
     },
     {
         id: 1,
-        path : "map/1",
+        path : "map/a_1",
     },
 
     {
         id: 2,
-        path : "map/2_test",
+        path : "map/a_2",
     },
 
     {
         id: 3,
-        path : "map/3",
+        path : "map/a_3",
+    },
+
+    {
+        id: 4,
+        path : "map/a_4",
+    },
+
+    {
+        id: 5,
+        path : "map/a_5",
+    },
+
+    {
+        id: 6,
+        path : "map/a_6",
     },
 ];
 
