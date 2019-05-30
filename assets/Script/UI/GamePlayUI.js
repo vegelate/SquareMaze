@@ -36,11 +36,23 @@ var GamePlayUI = cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
+        let self = this;
         GamePlayUI.instance = this
         this.pausePanel.active = false
         this.winPanel.active = false
 
         GameInfo.instance.setCommonTopBar(null)
+
+        this.node.on(cc.Node.EventType.TOUCH_START, function ( event ) {
+            cc.log('Touch Start');
+            self.onTouchStart(event.getLocationX(), event.getLocationY())
+          });
+
+        this.node.on(cc.Node.EventType.TOUCH_END, function ( event ) {
+            cc.log('Touch End');
+            self.onTouchEnd(event.getLocationX(), event.getLocationY())
+          });
+
     },
 
     onDestroy(){
@@ -48,7 +60,56 @@ var GamePlayUI = cc.Class({
     },
 
     start () {
+        let self = this;
+        let GamePlay = require ('GamePlay')
+        let gameNode = self.node.parent.getChildByName('Game')
+        self.gamePlay = gameNode.getComponent(GamePlay)
+    },
 
+    // 触屏开始
+    onTouchStart(x, y){
+        this.touchStartPos = cc.v2(x, y)
+        cc.log("touch start pos:", this.touchStartPos.toString())
+    },
+
+    // 触屏结束
+    onTouchEnd(x, y){
+        let self = this
+
+        if (this.touchStartPos == null) {
+            cc.log("touchStartPos is null")
+            return
+        }
+
+        let touchEndPos = cc.v2(x, y)
+
+        let d = touchEndPos.sub(this.touchStartPos);
+        if (Math.abs(d.x) > Math.abs(d.y)){
+            // x 移动
+            if (d.x > 0){
+                cc.log("Move to x+")
+                self.moveHero(1, 0)
+
+            }else if (d.x < 0){
+                cc.log("Move to x-")
+                self.moveHero(-1, 0)
+            }
+        }else if (Math.abs(d.y) > Math.abs(d.x)){
+            // y 移动
+            if (d.y > 0){
+                cc.log("Move to screen y+, map y-")
+                self.moveHero(0, -1)
+            }else if (d.y < 0){
+                cc.log("Move to screen y-, map y+")
+                self.moveHero(0, 1)
+            }
+        }
+
+    },
+
+    moveHero(x, y){
+        let self = this;
+        self.gamePlay.moveHero(x, y);
     },
 
     win(stars, scores, apRecover){
@@ -161,7 +222,7 @@ var GamePlayUI = cc.Class({
                 Helper.gotoLevel(nextIdx);
             }
             else{
-                cc.error("没有下一关了!")
+                cc.error("没有下一关了! nextIdx:", nextIdx)
             }            
         });
     },

@@ -2,7 +2,7 @@
 var globalConfig = {
     ApMax : 100,            // 体力最大值
     ApRecoverTime : 5,      // 多少秒恢复一点
-    ApConsume : 20,         // 进关卡消耗
+    ApConsume : 10,         // 进关卡消耗
     LevelReward : [         // 通关奖励
         {
             Stars : 0,      // 0 星通关

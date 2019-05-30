@@ -43,6 +43,7 @@ var GamePlay = cc.Class({
         self.MOVING_SPEED = 0.0333  // 移动速度
         self.pickables = {} // 可拾取物， coord_idx - item
 
+        /*
         this.node.on(cc.Node.EventType.TOUCH_START, function ( event ) {
             cc.log('Touch Start');
             self.onTouchStart(event.getLocationX(), event.getLocationY())
@@ -52,7 +53,7 @@ var GamePlay = cc.Class({
             cc.log('Touch End');
             self.onTouchEnd(event.getLocationX(), event.getLocationY())
           });
-
+          */
     },
 
     onDestroy(){
@@ -280,6 +281,11 @@ var GamePlay = cc.Class({
                 coord = cc.v2(nextPos.x, nextPos.y);
             }
             coords.push(nextPos)
+
+            // 经过终点判断
+            if (nextPos.equals(self.endCoord)){
+                break;
+            }
         }
 
         let numTiles = coords.length;    // 这次移动经过的 tile 数量
@@ -379,46 +385,6 @@ var GamePlay = cc.Class({
         return "wall"
     },
 
-    // 触屏开始
-    onTouchStart(x, y){
-        this.touchStartPos = cc.v2(x, y)
-        cc.log("touch start pos:", this.touchStartPos.toString())
-    },
-
-    // 触屏结束
-    onTouchEnd(x, y){
-        let self = this
-
-        if (this.touchStartPos == null) {
-            cc.log("touchStartPos is null")
-            return
-        }
-
-        let touchEndPos = cc.v2(x, y)
-
-        let d = touchEndPos.sub(this.touchStartPos);
-        if (Math.abs(d.x) > Math.abs(d.y)){
-            // x 移动
-            if (d.x > 0){
-                cc.log("Move to x+")
-                self.moveHero(1, 0)
-
-            }else if (d.x < 0){
-                cc.log("Move to x-")
-                self.moveHero(-1, 0)
-            }
-        }else if (Math.abs(d.y) > Math.abs(d.x)){
-            // y 移动
-            if (d.y > 0){
-                cc.log("Move to screen y+, map y-")
-                self.moveHero(0, -1)
-            }else if (d.y < 0){
-                cc.log("Move to screen y-, map y+")
-                self.moveHero(0, 1)
-            }
-        }
-
-    },
 
     // update (dt) {},
 

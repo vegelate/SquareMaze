@@ -148,6 +148,8 @@ cc.Class({
         let self = this
 
         let btn = Helper.find(self.node, 'Bottom/LoginButton');
+        cc.director.preloadScene('levelSelect')
+        
         Helper.buttonClickEffect(btn, function(){
             self.login()            
         })
