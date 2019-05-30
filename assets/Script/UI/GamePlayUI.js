@@ -29,6 +29,10 @@ var GamePlayUI = cc.Class({
         starSpriteFrame:{
             default:null,
             type:cc.SpriteFrame,
+        },
+        label:{
+            default:null,
+            type:cc.Label,
         }
 
     },
@@ -53,6 +57,7 @@ var GamePlayUI = cc.Class({
             self.onTouchEnd(event.getLocationX(), event.getLocationY())
           });
 
+        self.label.string = "第"+GameInfo.instance.levelIndex+"关"
     },
 
     onDestroy(){
